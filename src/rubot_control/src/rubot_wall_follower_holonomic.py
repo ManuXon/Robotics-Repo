@@ -31,12 +31,24 @@ def clbk_laser(msg):
     fright_max = int(170 * scanRangesLengthCorrectionFactor)
     front_min= int(170 * scanRangesLengthCorrectionFactor)
     front_max = int(190 * scanRangesLengthCorrectionFactor)
+    fleft_min = int(190 * scanRangesLengthCorrectionFactor)
+    fleft_max = int(210 * scanRangesLengthCorrectionFactor)
+    left_min = int(210 * scanRangesLengthCorrectionFactor)
+    left_max = int(240 * scanRangesLengthCorrectionFactor)
+    bleft_min = int(240 * scanRangesLengthCorrectionFactor)
+    bleft_max = int(290 * scanRangesLengthCorrectionFactor)
+    back_min = int(290 * scanRangesLengthCorrectionFactor)
+    back_max = int(330 * scanRangesLengthCorrectionFactor)
 
     regions = {
         'bright':  min(min(msg.ranges[bright_min:bright_max]), 3),
-        'right':  min(min(msg.ranges[right_min:right_max]), 3),
+        'right':  min(min(msg.ranges  [right_min:right_max]), 3),
         'fright': min(min(msg.ranges[fright_min:fright_max]), 3),
         'front':  min(min(msg.ranges[front_min:front_max]), 3),
+        'fleft':  min(min(msg.ranges[fleft_min:fleft_max]), 3),
+        'left':   min(min(msg.ranges[left_min:left_max]), 3),
+        'bleft':  min(min(msg.ranges[bleft_min:bleft_max]), 3),
+        'back':   min(min(msg.ranges[back_min:back_max]), 3)
     }
 
     take_action(regions)
@@ -45,30 +57,66 @@ def clbk_laser(msg):
 def take_action(regions):
     msg = Twist()
     linear_x = 0
+    linear_y = 0
     angular_z = 0
 
     state_description = ''
 
     if regions['front'] > d and regions['fright'] > 2*d and regions['right'] > 2*d and regions['bright'] > 2*d:
-        state_description = 'case 1 - nothing'
+        state_description = 'case 1 - nothing right'
+        linear_x = -vx
+        angular_z = 0
+    
+    if regions['front'] > d and regions['fleft'] > 2*d and regions['left'] > 2*d and regions['bleft'] > 2*d:
+        state_description = 'case 1 - nothing left'
         linear_x = vx
         angular_z = 0
+    
+
+    elif regions['front'] < d and regions['right'] < d:
+        state_description = 'case 7 - corner right'
+        linear_y = vx
+        angular_z = 0
+    
+    elif  regions['back'] < d and regions['left'] < d:
+        state_description = 'case 7 - corner left'
+        linear_x = -vx/2
+        angular_z = 0
+
     elif regions['front'] < d:
         state_description = 'case 2 - front'
         linear_x = 0
-        angular_z = wz
+        linear_y = vx
+
     elif regions['fright'] < d:
         state_description = 'case 3 - fright'
         linear_x = vx
         angular_z = wz/2
+    
+    elif regions['fleft'] < d:
+        state_description = 'case 3 - fleft'
+        linear_x = -vx
+        angular_z = -wz/2    
     elif regions['front'] > d and regions['right'] < d:
         state_description = 'case 4 - right'
         linear_x = vx
+        angular_z = 0
+    
+    elif regions['front'] > d and regions['left'] < d:
+        state_description = 'case 4 - left'
+        linear_x = -vx
         angular_z = 0
     elif regions['bright'] < d:
         state_description = 'case 5 - bright'
         linear_x = vx/2
         angular_z = -wz
+    elif regions['bleft'] < d:
+        state_description = 'case 5 - bleft'
+        linear_x = -vx/2
+        angular_z = wz    
+    
+
+        
     else:
         state_description = 'case 6 - Far'
         linear_x = vx * vf
@@ -76,6 +124,7 @@ def take_action(regions):
 
     rospy.loginfo(state_description)
     msg.linear.x = linear_x
+    msg.linear.y = linear_y
     msg.angular.z = angular_z
     pub.publish(msg)
     rate.sleep()

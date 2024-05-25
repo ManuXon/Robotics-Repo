@@ -4,18 +4,17 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="rubot">
-  <material name="banana" >
+  <material name="applegreen" >
+    <color rgba="0.4627450980392157 0.803921568627451 0.14901960784313725 1.0" />
+  </material>
+   <material name="banana" >
     <color rgba="1.0 1.0 0.49411764705882355 1.0" />
   </material>
-  <material name="black">
-    <color rgba="0.15 0.15 0.15 1.0"/>
+  <material name="bubblegum" >
+    <color rgba="1.0 0.4235294117647059 0.7098039215686275 1.0" />
   </material>
-  <material name="babyshitgreen" >
-    <color rgba="0.5333333333333333 0.592156862745098 0.09019607843137255 1.0" />
-  </material>
-  </material>
-    <material name="camo" >
-    <color rgba="0.4980392156862745 0.5607843137254902 0.3058823529411765 1.0" />
+  <material name="pinky" >
+    <color rgba="0.9882352941176471 0.5254901960784314 0.6666666666666666 1.0" />
   </material>
 
 <!-- base_footprint reference frame without inertia is needed -->
@@ -32,7 +31,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/base_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="banana"/>
+      <material name="applegreen"/>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
@@ -59,7 +58,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/upper_left_wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="babyshitgreen"/>
+      <material name="banana"/>
     </visual>
     <collision>
       <origin rpy="-1.57 0 0" xyz="0 0 0"/>
@@ -85,7 +84,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/lower_left_wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="babyshitgreen"/>
+      <material name="banana"/>
     </visual>
     <collision>
       <origin rpy="-1.57 0 0" xyz="0 0 0"/>
@@ -111,7 +110,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/upper_right_wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="babyshitgreen"/>
+      <material name="banana"/>
     </visual>
     <collision>
       <origin rpy="-1.57 0 0" xyz="0 0 0"/>
@@ -137,7 +136,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/lower_right_wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="babyshitgreen"/>
+      <material name="banana"/>
     </visual>
     <collision>
       <origin rpy="-1.57 0 0" xyz="0 0 0"/>
@@ -163,7 +162,7 @@
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/piCamera.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="black"/>
+      <material name="bubblegum"/>
     </visual>
     <collision>
       <origin rpy="0 1.570795 0" xyz="0 0 0"/>
@@ -180,11 +179,11 @@
   <!-- LIDAR base_scan -->
   <link name="base_scan">
     <visual>
-      <origin rpy="0 3.14159265 0" xyz="0 0 0.0"/>
+      <origin rpy="0 0 3.14159265" xyz="0 0 0.0"/>
       <geometry>
         <mesh filename="package://rubot_mecanum_description/meshes/rubot/Lidar.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="camo"/>
+      <material name="bubblegum"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -200,37 +199,10 @@
   </link>
   <joint name="scan_joint" type="fixed">
     <axis xyz="0 0 1"/>
-    <origin rpy="0 0 0" xyz="0 0 0.15"/>
+    <origin rpy="0 0 3.14159265" xyz="0 0 0.15"/>
     <parent link="base_link"/>
     <child link="base_scan"/>
   </joint>
-   <!-- Joint to put the lidar top part -->
-  <joint name="lidar_top_part_joint" type="fixed">
-  <origin rpy="0 0 0" xyz="0 0 0.05"/>
-  <parent link="base_scan"/>
-  <child link="lidar_top_part"/>
-  </joint>
-  <!-- 3D part on top of the LIDAR -->
-<link name="lidar_top_part">
-  <visual>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <geometry>
-      <box size="0.05 0.05 0.05"/>
-    </geometry>
-    <material name="camo"/>
-  </visual>
-  <collision>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <geometry>
-      <box size="0.05 0.05 0.05"/>
-    </geometry>
-  </collision>
-  <inertial>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <mass value="0.02"/>
-    <inertia ixx="1e-6" ixy="1e-6" ixz="1e-6" iyy="1e-6" iyz="0" izz="1e-6"/>
-  </inertial>
-</link>
   <!-- Box part -->
   <joint name="joint_part" type="fixed">
     <origin rpy="0 0 0" xyz="-0.10 0.0 0.09"/>
@@ -243,7 +215,7 @@
       <geometry>
         <box size="0.05 0.05 0.025"/>
       </geometry>
-      <material name="black"/>
+      <material name="bubblegum"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -254,6 +226,32 @@
     <inertial>
       <mass value="0.01"/>
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+    <!--Cilindro en la parte trasera-->
+    </link>
+    <joint name="cilinder_on_back_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.025"/>
+        <parent link="base_scan"/>
+        <child link="cilinder_on_back"/>
+    </joint>
+    <link name="cilinder_on_back">
+    <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.02" length="0.04"/>
+        </geometry>
+        <material name="pinky"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.025"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.07"/>
+      <inertia ixx="1e-6" ixy="1e-6" ixz="1e-6" iyy="1e-6" iyz="0" izz="1e-6"/>
     </inertial>
   </link>
   <!-- Mecanum drive controller -->
@@ -359,17 +357,17 @@
   <gazebo reference="base_scan">
     <material>Gazebo/Red</material>
   </gazebo>
-   <gazebo reference="lidar_top_part">
-    <material>Gazebo/Blue</material>
+  <gazebo reference="cilinder_on_back">
+    <material>Gazebo/Green</material>
   </gazebo>
   <gazebo reference="camera">
-    <material>Gazebo/Green</material>
+    <material>Gazebo/Red</material>
   </gazebo>
   <gazebo reference="part">
-    <material>Gazebo/Green</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="upper_left_wheel">
-    <material>Gazebo/Yellow</material>
+    <material>Gazebo/Blue</material>
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
     <kp>1000</kp>
@@ -380,7 +378,7 @@
     <fdir1>1 0 0</fdir1>
   </gazebo>
   <gazebo reference="lower_left_wheel">
-    <material>Gazebo/Yellow</material>
+    <material>Gazebo/Red</material>
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
     <kp>1000</kp>
@@ -391,7 +389,7 @@
     <fdir1>1 0 0</fdir1>
   </gazebo>
   <gazebo reference="upper_right_wheel">
-    <material>Gazebo/Yellow</material>
+    <material>Gazebo/Red</material>
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
     <kp>1000</kp>
@@ -402,7 +400,7 @@
     <fdir1>1 0 0</fdir1>
   </gazebo>
   <gazebo reference="lower_right_wheel">
-    <material>Gazebo/Yellow</material>
+    <material>Gazebo/Red</material>
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
     <kp>1000</kp>

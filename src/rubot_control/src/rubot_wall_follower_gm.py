@@ -32,6 +32,7 @@ class WallFollower:
         self.__state_TUNRING = 2
         self.__state_APPROACHING_WALL = 3
 
+
         self.__state = self.__state_FOLLOWING_WALL
 
         # Propiedades secundarias
@@ -105,12 +106,17 @@ class WallFollower:
 
             self.__state = self.__state_APPROACHING_CORNER
 
+        if self.__isThereAWall(self.__A, 0.8) and \
+            self.__state == self.__state_FOLLOWING_WALL:
+
+            self.__state = self.__state_TUNRING    
+
         elif not self.__isThereAWall(self.__B, 0.5) and \
                 self.__state == self.__state_APPROACHING_CORNER:
 
             self.__state = self.__state_TUNRING
 
-        elif self.__isThereAWall(self.__A, 0.3) and \
+        elif self.__isThereAWall(self.__A, 0.5) and \
                 self.__state == self.__state_TUNRING:
 
             self.__state = self.__state_APPROACHING_WALL
@@ -119,6 +125,7 @@ class WallFollower:
                 self.__state == self.__state_APPROACHING_WALL:
 
             self.__state = self.__state_FOLLOWING_WALL
+        
 
         # Actuamos en funcion del estado
         # Si estamos aproximandonos a la pared o a la esquina
