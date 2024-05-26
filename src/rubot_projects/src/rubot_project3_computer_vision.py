@@ -9,7 +9,31 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 import cv2 as cv
 from rubot_project1_picture import TakePhoto
-from TrafficSignalsDetection_sp import signal_detected
+import tensorflow as tf
+from tensorflow.keras.models import load_model  # TensorFlow is required for Keras to work
+import numpy as np
+import cv2
+
+def signal_detected(photo):
+    img = cv2.imread(photo)
+    image = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)
+    image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
+    # Normalize the image array
+    image = (image / 127.5) - 1
+
+    # Predicts the model
+    prediction = model.predict(image)
+    index = np.argmax(prediction)
+    class_name = class_names[index]
+
+    direction =  class_name[2:]
+    if "esquerra" in direction:
+        return "right"
+    elif "dreta" in direction:
+        return "left"
+    else:
+        return "up"
+
 
 def create_pose_stamped(position_x, position_y, rotation_z):
     goal = MoveBaseGoal()# Has to be created here
@@ -88,6 +112,11 @@ if __name__ == '__main__':
         rubot_projects_path = rospack.get_path('rubot_projects')
         # Construct the full path to the photos directory
         photos_path = rubot_projects_path + '/photos/'
+        np.set_printoptions(suppress=True)
+        # Load the model
+        model = load_model(rubot_projects_path + '/model/' + "keras_model.h5", compile=False)
+        # Load the labels
+        class_names = open(rubot_projects_path + '/model/' + "labels.txt", "r").readlines()
         nav2goals()
 
     except rospy.ROSInterruptException:

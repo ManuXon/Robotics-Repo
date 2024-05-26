@@ -1,0 +1,3 @@
+0 esquerra
+1 dreta
+2 NADA

@@ -38,7 +38,7 @@ def create_pose_stamped(position_x, position_y, rotation_z):
 
 def init_pose():
     pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=10)
-    initial_pose = create_initpose(0.5, -0.5, radians(-90))
+    initial_pose = create_initpose(0.745, 0.0017, radians(-30))
     rate = rospy.Rate(1) # 1hz has to be low value
     pub.publish(initial_pose)
     rate.sleep()
